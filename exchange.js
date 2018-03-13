@@ -28,6 +28,24 @@ async function loadData (page, limit) {
         if (!products.hasOwnProperty(json.data[i].product_id)) {
           products[json.data[i].product_id] = json.data[i].product
           products[json.data[i].product_id].sku = []
+          products[json.data[i].product_id].attributes = products[json.data[i].product_id].attributes.concat(products[json.data[i].product_id].model.attributes)
+          delete products[json.data[i].product_id].model.attributes
+
+          products[json.data[i].product_id].attributes.forEach(function (element) {
+            if (element.alias === 'season') {
+              switch (element.value) {
+                case 'Лето':
+                  element.value = 1
+                  break
+                case 'Зима':
+                  element.value = 2
+                  break
+                default:
+                  element.value = 0
+                  break
+              }
+            }
+          })
         }
 
         delete json.data[i].product
