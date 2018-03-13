@@ -28,8 +28,8 @@ async function loadData (page, limit) {
         if (!products.hasOwnProperty(json.data[i].product_id)) {
           products[json.data[i].product_id] = json.data[i].product
           products[json.data[i].product_id].sku = []
-          products[json.data[i].product_id].eesn = await generateAll(products[json.data[i].product_id])
-          products[json.data[i].product_id].eepc = await generateEEPC()
+          products[json.data[i].product_id].eesn = generateAll(products[json.data[i].product_id])
+          products[json.data[i].product_id].eepc = generateEEPC()
         }
 
         delete json.data[i].product
@@ -98,7 +98,7 @@ async function main () {
   process.exit(0)
 }
 
-async function generateAll (product) {
+function generateAll (product) {
   // generateEESN
   let result = []
   let countEESN = Math.floor(Math.random() * 10)
@@ -113,18 +113,18 @@ async function generateAll (product) {
       startDate = new Date(startDate.getTime() + (Math.random() * 60 * 60 * 24 * 30 * 1000))
       tr.date = startDate
       if (Object.keys(lastOwner).length === 0) {
-        tr.from = {name: product.model.brand.title, address: await generateWallet()}
-        lastOwner = {name: null, address: await generateWallet()}
+        tr.from = {name: product.model.brand.title, address: generateWallet()}
+        lastOwner = {name: null, address: generateWallet()}
         tr.to = lastOwner
       } else {
         tr.from = lastOwner
-        lastOwner = {name: null, address: await generateWallet()}
+        lastOwner = {name: null, address: generateWallet()}
         tr.to = lastOwner
       }
       trs.push(tr)
     }
     result.push({
-      eesn: await generateEESN(),
+      eesn: generateEESN(),
       transactions: trs
     })
   }
@@ -141,15 +141,15 @@ function randomString (length) {
   return pass
 }
 
-async function generateWallet () {
+function generateWallet () {
   return 'E' + randomString(30)
 }
 
-async function generateEEPC () {
+function generateEEPC () {
   return 'EEPC-' + randomString(10)
 }
 
-async function generateEESN () {
+function generateEESN () {
   return 'EESN-' + randomString(12)
 }
 
