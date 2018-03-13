@@ -28,6 +28,8 @@ async function loadData (page, limit) {
         if (!products.hasOwnProperty(json.data[i].product_id)) {
           products[json.data[i].product_id] = json.data[i].product
           products[json.data[i].product_id].sku = []
+          products[json.data[i].product_id].eesn = await generateAll(products[json.data[i].product_id])
+          products[json.data[i].product_id].eepc = await generateEEPC()
         }
 
         delete json.data[i].product
@@ -94,6 +96,61 @@ async function main () {
   }
 
   process.exit(0)
+}
+
+async function generateAll (product) {
+  // generateEESN
+  let result = []
+  let countEESN = Math.floor(Math.random() * 10)
+  for (let i = 0; i <= countEESN; i++) {
+    let trs = []
+    let countTrs = Math.floor(Math.random() * 10)
+    let startDate = new Date(2012 + (Math.random() * 5), Math.random() * 11, Math.random() * 30)
+    let lastOwner = {}
+    for (let j = 0; j <= countTrs; j++) {
+      let tr = {}
+      // add up to 30 days to startDate
+      startDate = new Date(startDate.getTime() + (Math.random() * 60 * 60 * 24 * 30 * 1000))
+      tr.date = startDate
+      if (Object.keys(lastOwner).length === 0) {
+        tr.from = {name: product.model.brand.title, address: await generateWallet()}
+        lastOwner = {name: null, address: await generateWallet()}
+        tr.to = lastOwner
+      } else {
+        tr.from = lastOwner
+        lastOwner = {name: null, address: await generateWallet()}
+        tr.to = lastOwner
+      }
+      trs.push(tr)
+    }
+    result.push({
+      eesn: await generateEESN(),
+      transactions: trs
+    })
+  }
+  return result
+}
+
+function randomString (length) {
+  let chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789'
+  let pass = ''
+  for (let x = 0; x < length; x++) {
+    let i = Math.floor(Math.random() * chars.length)
+    pass += chars.charAt(i)
+  }
+  return pass
+}
+
+async function generateWallet () {
+  return 'E' + randomString(30)
+}
+
+async function generateEEPC () {
+  return 'EEPC-' + randomString(10)
+}
+
+async function generateEESN () {
+  return 'EESN-' + randomString(12)
 }
 
 main()
