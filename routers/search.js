@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get('/', async function (req, res) {
   try {
-    let q = req.query.q ? req.query.q : null
+    let q = req.query.q ? req.query.q : ''
     let width = req.query.width ? req.query.width : null
     let height = req.query.height ? req.query.height : null
     let radius = req.query.radius ? req.query.radius : null
@@ -15,32 +15,52 @@ router.get('/', async function (req, res) {
 
     if (width) {
       filter.bool.must.push({
-        'terms': {
-          'model.attributes': {alias: 'width', value: width}
+        'term': {
+          'attributes.alias': 'width'
+        }
+      })
+      filter.bool.must.push({
+        'term': {
+          'attributes.value': width
         }
       })
     }
 
     if (height) {
       filter.bool.must.push({
-        'terms': {
-          'model.attributes.height': height
+        'term': {
+          'attributes.alias': 'height'
+        }
+      })
+      filter.bool.must.push({
+        'term': {
+          'attributes.value': height
         }
       })
     }
 
     if (radius) {
       filter.bool.must.push({
-        'terms': {
-          'model.attributes.radius': radius
+        'term': {
+          'attributes.alias': 'radius'
+        }
+      })
+      filter.bool.must.push({
+        'term': {
+          'attributes.value': radius
         }
       })
     }
 
     if (season) {
       filter.bool.must.push({
-        'terms': {
-          'model.attributes.season': season
+        'term': {
+          'attributes.alias': 'season'
+        }
+      })
+      filter.bool.must.push({
+        'term': {
+          'attributes.value': Number(season)
         }
       })
     }
@@ -49,7 +69,7 @@ router.get('/', async function (req, res) {
       index: config.get('index'),
       type: config.get('type'),
       body: {
-        size: 20,
+        size: 5,
         'query': {
           'bool': {
             'filter': filter,
@@ -62,8 +82,6 @@ router.get('/', async function (req, res) {
         }
       }
     }
-    //res.json(query)
-    //return null
 
     let data = await elastic.search(query)
 

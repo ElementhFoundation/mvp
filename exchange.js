@@ -28,8 +28,6 @@ async function loadData (page, limit) {
         if (!products.hasOwnProperty(json.data[i].product_id)) {
           products[json.data[i].product_id] = json.data[i].product
           products[json.data[i].product_id].sku = []
-          products[json.data[i].product_id].eesn = generateAll(products[json.data[i].product_id])
-          products[json.data[i].product_id].eepc = generateEEPC()
         }
 
         delete json.data[i].product
@@ -70,11 +68,16 @@ async function main () {
             _id: key
           }
         })
+
+        let doc = products[key]
+        doc.eesn = generateAll(products[key])
+        doc.eepc = generateEEPC()
+
         delete products[key].id
         delete products[key].product_id
 
         bulk.push({
-          doc: products[key],
+          doc: doc,
           'doc_as_upsert': true
         })
 
