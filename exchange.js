@@ -1,8 +1,10 @@
 const config = require('config')
 const rp = require('request-promise')
 const elastic = require('./elasticDAO')
+const jsonfile = require('jsonfile')
 
 let products = {}
+let mapping = jsonfile.readFileSync('settings.json')
 
 async function loadData (page, limit) {
   try {
@@ -49,6 +51,7 @@ async function main () {
   let amount = 0
   try {
     await elastic.indices.delete({index: config.get('index'), allowNoIndices: true, ignoreUnavailable: true})
+    await elastic.indices.create({index: config.get('index'), body: mapping})
 
     await loadData(1, 100)
     console.log('data download completed')

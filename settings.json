@@ -1,0 +1,22 @@
+{
+  "settings": {
+    "index": {
+      "number_of_replicas": 2
+    }
+  },
+  "mappings": {
+    "product": {
+      "dynamic": true,
+      "properties": {
+        "attributes": {
+          "type": "nested",
+          "include_in_parent": true
+        },
+        "model.attributes": {
+          "type": "nested",
+          "include_in_parent": true
+        }
+      }
+    }
+  }
+}
