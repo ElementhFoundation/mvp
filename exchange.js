@@ -45,6 +45,8 @@ async function loadData (page, limit) {
                   break
               }
             }
+            if (element.value === 'Нет') element.value = 'No'
+            if (element.value === 'Да') element.value = 'Yes'
           })
         }
 
