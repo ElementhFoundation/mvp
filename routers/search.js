@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get('/', async function (req, res) {
   try {
-    let q = req.query.q ? req.query.q : ''
+    let q = req.query.q ? req.query.q : 'tyres'
     let width = req.query.width ? req.query.width : null
     let height = req.query.height ? req.query.height : null
     let radius = req.query.radius ? req.query.radius : null

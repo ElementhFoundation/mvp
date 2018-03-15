@@ -32,8 +32,8 @@ app.get('*', function (req, res) {
   res.status(404).json({response: {error: 'Page not found'}})
 })
 
-app.listen(9989, function () {
-  console.log('listening at http://localhost:9989')
+app.listen(9980, function () {
+  console.log('listening at http://localhost:9980')
   if (process.send) {
     process.send('ready')
   }
