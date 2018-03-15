@@ -36,3 +36,4 @@ package-lock.json
 *.orig
 .sass-cache
 /config/
+/uploads/
