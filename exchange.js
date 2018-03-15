@@ -9,7 +9,7 @@ let mapping = jsonfile.readFileSync('settings.json')
 async function loadData (page, limit) {
   try {
     let options = {
-      uri: config.get('miiix.apiUrl') + config.get('miiix.endPoint'),
+      uri: config.get('miiix.apiUrl') + config.get('miiix.endPointSku'),
       qs: {
         token: config.get('miiix.token'),
         page: page,
@@ -21,8 +21,10 @@ async function loadData (page, limit) {
       },
       json: true
     }
-
     let json = await rp(options)
+    options.qs.page = 1
+    options.uri = config.get('miiix.apiUrl') + config.get('miiix.endPointStock')
+    let stocks = await rp(options)
     if (json.data) {
       for (let i = 0; i < json.data.length; i++) {
         if (!products.hasOwnProperty(json.data[i].product_id)) {
@@ -35,13 +37,13 @@ async function loadData (page, limit) {
             if (element.alias === 'season') {
               switch (element.value) {
                 case 'Лето':
-                  element.value = 1
+                  element.value = 'summer'
                   break
                 case 'Зима':
-                  element.value = 2
+                  element.value = 'winter'
                   break
                 default:
-                  element.value = 0
+                  element.value = 'all'
                   break
               }
             }
@@ -50,6 +52,7 @@ async function loadData (page, limit) {
           })
         }
 
+        json.data[i].stock = stocks.data.find(s => s.id === json.data[i].stock_id)
         delete json.data[i].product
         products[json.data[i].product_id].sku.push(json.data[i])
       }
@@ -104,7 +107,7 @@ async function main () {
         if (bulk.length > 998 || (key === lastKey && bulk.length)) {
           let results = await elastic.bulk({body: bulk})
           if (results.errors) {
-            console.error(results.errors)
+            console.error(results)
             process.exit(1)
           }
           amount = amount + (bulk.length / 2)
@@ -143,6 +146,9 @@ function generateAll (product) {
         tr.from = lastOwner
         lastOwner = {name: null, address: generateWallet()}
         tr.to = lastOwner
+      }
+      if (trs.length === countTrs) {
+        tr.to.name = product.sku[0].stock.company.alias
       }
       trs.push(tr)
     }

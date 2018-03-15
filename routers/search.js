@@ -60,7 +60,7 @@ router.get('/', async function (req, res) {
       })
       filter.bool.must.push({
         'term': {
-          'attributes.value': Number(season)
+          'attributes.value': season
         }
       })
     }
