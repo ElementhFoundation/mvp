@@ -3,13 +3,15 @@ const bodyParser = require('body-parser')
 const logger = require('morgan')
 // Routers
 const search = require('./routers/search')
+const upload = require('./routers/upload')
 
 const app = express()
 app.use(logger('combined'))
 
 // parse application/json
-app.use(bodyParser.json({limit: '1mb'}))
+app.use(bodyParser.json({limit: '10mb'}))
 app.use('/search', search)
+app.use('/upload', upload)
 
 // Error handling middleware
 // Handle error in development mode.
