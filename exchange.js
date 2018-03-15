@@ -92,8 +92,8 @@ async function main () {
           }
         })
 
-        let doc = products[key]
-        doc.eesn = generateAll(products[key])
+        let doc = Object.assign(products[key])
+        doc.eesn = generateAll(doc)
         doc.eepc = generateEEPC()
 
         delete products[key].id
