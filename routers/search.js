@@ -64,10 +64,10 @@ router.get('/', async function (req, res) {
         })
         break
       case 'tyres':
-        let tiresWidth = req.query['tires-width'] ? req.query['tires-width'] : null
-        let tiresHeight = req.query['tires-height'] ? req.query['tires-height'] : null
-        let tiresRadius = req.query['tires-radius'] ? req.query['tires-radius'] : null
-        let tiresSeason = req.query['tires-season'] ? req.query['tires-season'] : null
+        let tiresWidth = req.query['tyres-width'] ? req.query['tyres-width'] : null
+        let tiresHeight = req.query['tyres-height'] ? req.query['tyres-height'] : null
+        let tiresRadius = req.query['tyres-radius'] ? req.query['tyres-radius'] : null
+        let tiresSeason = req.query['tyres-season'] ? req.query['tyres-season'] : null
 
         if (tiresWidth) {
           filter.bool.must.push({
