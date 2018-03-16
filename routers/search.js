@@ -134,7 +134,7 @@ router.get('/', async function (req, res) {
       index: config.get('index'),
       type: config.get('type'),
       body: {
-        size: 5,
+        size: 40,
         'query': {
           'bool': {
             'filter': filter,
