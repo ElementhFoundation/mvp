@@ -95,9 +95,9 @@ async function main () {
         let doc = Object.assign(products[key])
         doc.eesn = generateAll(doc)
         doc.eepc = generateEEPC()
-
-        delete products[key].id
-        delete products[key].product_id
+        delete doc.id
+        delete doc.product_id
+        delete products[key]
 
         bulk.push({
           doc: doc,
