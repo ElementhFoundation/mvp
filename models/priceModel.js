@@ -11,4 +11,4 @@ const schema = new Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('User', schema)
+module.exports = mongoose.model('Price', schema)
