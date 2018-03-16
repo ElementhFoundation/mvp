@@ -5,9 +5,8 @@ const router = express.Router()
 
 router.get('/', async function (req, res) {
   try {
-    let q = req.query.q ? req.query.q : ''
     let searchType = req.query['search-type']
-
+    let q = req.query.q ? req.query.q : searchType
     if (req.query[searchType + '-brand'] && searchType !== 'none') q += ' ' + req.query[searchType + '-brand']
     if (req.query[searchType + '-model'] && searchType !== 'none') q += ' ' + req.query[searchType + '-model']
     let filter = {bool: {must: []}}
