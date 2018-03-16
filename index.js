@@ -1,6 +1,11 @@
+const config = require('config')
+const mongoose = require('mongoose')
 const express = require('express')
 const bodyParser = require('body-parser')
 const logger = require('morgan')
+
+mongoose.Promise = require('bluebird')
+mongoose.connect(config.get('mongoDB.connectionString'))
 // Routers
 const search = require('./routers/search')
 const upload = require('./routers/upload')
