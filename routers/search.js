@@ -63,7 +63,7 @@ router.get('/', async function (req, res) {
           }
         })
         break
-      case 'tires':
+      case 'tyres':
         let tiresWidth = req.query['tires-width'] ? req.query['tires-width'] : null
         let tiresHeight = req.query['tires-height'] ? req.query['tires-height'] : null
         let tiresRadius = req.query['tires-radius'] ? req.query['tires-radius'] : null
