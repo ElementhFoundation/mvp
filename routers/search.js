@@ -7,7 +7,8 @@ router.get('/', async function (req, res) {
   try {
     let searchType = req.query['search-type']
     let q = req.query.q ? req.query.q : searchType
-    if (req.query[searchType + '-brand'] && searchType !== 'none') q += ' ' + req.query[searchType + '-brand']
+    let brand = ''
+    if (req.query[searchType + '-brand'] && searchType !== 'none') brand = req.query[searchType + '-brand']
     if (req.query[searchType + '-model'] && searchType !== 'none') q += ' ' + req.query[searchType + '-model']
     let filter = {bool: {must: []}}
 
@@ -128,23 +129,33 @@ router.get('/', async function (req, res) {
         })
         break
     }
-
-    let query = {
-      index: config.get('index'),
-      type: config.get('type'),
-      body: {
-        size: 40,
-        'query': {
-          'bool': {
-            'filter': filter,
-            'must': {
+    let body = {
+      size: 40,
+      'query': {
+        'bool': {
+          'filter': filter,
+          'must': [
+            {
               'query_string': {
                 'query': q
               }
             }
-          }
+          ]
         }
       }
+    }
+    if (brand) {
+      body.query.bool.must.push({
+        'query_string': {
+          'fields': ['model.brand.title'],
+          'query': brand
+        }
+      })
+    }
+    let query = {
+      index: config.get('index'),
+      type: config.get('type'),
+      body: body
     }
 
     let data = await elastic.search(query)
